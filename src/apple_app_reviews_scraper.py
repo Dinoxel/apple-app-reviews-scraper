@@ -5,6 +5,7 @@ import requests
 import re
 import time
 from tqdm import tqdm
+import datetime
 
 
 def get_token(country: str, app_name: str, app_id: str, user_agents: list) -> str:
@@ -20,10 +21,14 @@ def get_token(country: str, app_name: str, app_id: str, user_agents: list) -> st
     if response.status_code != 200:
         print(f"GET request failed. Response: {response.status_code} {response.reason}")
 
+    token = None
     tags = response.text.splitlines()
     for tag in tags:
         if re.match(r"<meta.+web-experience-app/config/environment", tag):
             token = re.search(r"token%22%3A%22(.+?)%22", tag).group(1)
+
+    if token is None:
+        raise ValueError("Token not found.")
 
     # print(f"Bearer {token}")
     return token
@@ -61,7 +66,7 @@ def fetch_reviews(country: str,
     }
 
     params = (
-        ('l', 'en-GB'),  # language
+        ('l', 'fr-FR'),  # language
         ('offset', str(offset)),  # paginate this offset
         ('limit', MAX_RETURN_LIMIT),  # max valid is 20
         ('platform', 'web'),
@@ -163,6 +168,9 @@ def start_fetching(app_list,
                    columns_to_drop
                    ):
     df = pd.DataFrame()
+
+    current_date = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+
     for app in app_list:
         app_name = app.get("app_name")
         print("=====================================================================================================")
@@ -179,12 +187,12 @@ def start_fetching(app_list,
 
         df_app_reviews = df_app_reviews.drop(columns=columns_to_drop, errors='ignore')
         df_app_reviews = df_app_reviews.rename(columns=columns_naming, errors='ignore')
-        path = f"../data/{app_name}_reviews.csv"
+        path = f"../data/{current_date}_{app_name}_reviews.csv"
         df_app_reviews.to_csv(path, index=False, sep=";", encoding="utf-8")
         print(f"Saved '{app_name}' data to '{path}'.")
 
         df = pd.concat([df, df_app_reviews])
 
-    master_path = "../data/all_reviews.csv"
+    master_path = f"../data/{current_date}_all_reviews.csv"
     df.to_csv(master_path, index=False, sep=";", encoding="utf-8")
     print(f"Saved all apps data to '{master_path}'.")
