@@ -161,6 +161,7 @@ def fetch_multiple_reviews(country: str,
 
     return data
 
+
 def start_fetching(app_list,
                    country,
                    user_agents,

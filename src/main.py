@@ -5,7 +5,6 @@ import json
 pd.set_option('display.max_columns', None)
 pd.set_option('display.max_rows', None)
 
-
 app_list_path = "../app_list.json"
 app_list = json.load(open(app_list_path))
 
