@@ -1,3 +1,5 @@
+![Python Version](https://img.shields.io/badge/Python-3.10-brightgreen) ![License](https://img.shields.io/pypi/l/app-store-scraper)
+
 # How to run the program
 1. Install python 3.11
 2. Install packages with `pip install -r requirements.txt`
