@@ -51,7 +51,7 @@ def fetch_reviews(country: str,
 
     ## Define request headers and params ------------------------------------
     landing_url = f'https://apps.apple.com/{country}/app/{app_name}/id{app_id}'
-    request_url = f'https://amp-api.apps.apple.com/v1/catalog/{country}/apps/{app_id}/reviews'
+    request_url = f'https://amp-api-edge.apps.apple.com/v1/catalog/{country}/apps/{app_id}/reviews'
 
     MAX_RETURN_LIMIT = '20'
 
@@ -66,7 +66,7 @@ def fetch_reviews(country: str,
     }
 
     params = (
-        ('l', 'fr-FR'),  # language
+        # ('l', 'fr-FR'),  # language (optional)
         ('offset', str(offset)),  # paginate this offset
         ('limit', MAX_RETURN_LIMIT),  # max valid is 20
         ('platform', 'web'),
